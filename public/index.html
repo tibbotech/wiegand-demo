@@ -1,0 +1,109 @@
+<html lang="en" >
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <link rel="stylesheet" href="md-data-table/md-data-table.min.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+
+
+    <script src="md-data-table/md-data-table.min.js"></script>
+
+    <!-- Your application bootstrap  -->
+    <script src="main.js"></script>
+</head>
+<body ng-app="accessControl" ng-cloak ng-controller="tabsController as tabs">
+    <md-content ng-hide="tabs.locked">
+        <md-tabs md-border-bottom md-dynamic-height>
+            <md-tab label="Add a User" md-on-select="tabs.setActiveTab('add-user')">
+                <md-content class="md-padding">
+                    <h2 class="md-title">Add / Update User</h2>
+
+                    <form name="newUser.userForm" ng-controller="newUserController as newUser">
+                        <div layout-gt-xs="column">
+                            <md-input-container class="md-block" flex-gt-xs>
+                                <label>Firs Name:</label>
+                                <input ng-model="newUser.userInfo.firstname" required>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-xs>
+                                <label>Last Name:</label>
+                                <input ng-model="newUser.userInfo.lastname" required>
+                            </md-input-container>
+
+                            <md-input-container class="md-block" flex-gt-xs>
+                                <label>User ID (Read an Access Card):</label>
+                                <input ng-model="newUser.userInfo.userId" required readonly>
+                            </md-input-container>
+                        </div>
+                        <md-button class="md-raised md-primary" ng-disabled="newUser.userForm.$invalid" ng-click="newUser.add()">Add user</md-button>
+                    </form>
+
+                </md-content>
+            </md-tab>
+
+            <md-tab label="User List" md-on-select="tabs.setActiveTab('user-list')">
+                <md-content class="md-padding" ng-controller="userListController as userList">
+                    <h2 class="md-title">List / Delete Users</h2>
+                    <md-table-container>
+                        <table md-table md-row-select ng-model="userList.selected" md-progress="promise">
+                            <thead md-head md-on-reorder="getDesserts">
+                            <tr md-row>
+                                <th md-column>User ID</th>
+                                <th md-column>First Name</th>
+                                <th md-column>Last Name</th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row md-select="user" md-select-id="userId" md-auto-select ng-repeat="user in userList.list">
+                                <td md-cell>{{user.userId}}</td>
+                                <td md-cell>{{user.firstname}}</td>
+                                <td md-cell>{{user.lastname}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                    <md-button class="md-raised md-primary" ng-disabled="userList.selected.length === 0" ng-click="userList.delete()">Delete user</md-button>
+                </md-content>
+            </md-tab>
+
+            <md-tab label="Events" md-on-select="tabs.setActiveTab('events-list')">
+                <md-content class="md-padding" ng-controller="eventsListController as eventList">
+                    <h2 class="md-title">Event list</h2>
+                    <md-table-container>
+                        <table md-table md-progress="promise">
+                            <thead md-head md-on-reorder="getDesserts">
+                            <tr md-row>
+                                <th md-column>Firstname</th>
+                                <th md-column>Lastname</th>
+                                <th md-column>Timestamp</th>
+                                <th md-column>Type</th>
+                            </tr>
+                            </thead>
+                            <tbody md-body>
+                            <tr md-row ng-repeat="event in eventList.list track by $index">
+                                <td md-cell>{{event.firstname}}</td>
+                                <td md-cell>{{event.lastname}}</td>
+                                <td md-cell>{{event.timestamp}}</td>
+                                <td md-cell>{{event.type}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+    </md-content>
+</body>
+</html>
