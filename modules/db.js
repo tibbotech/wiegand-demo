@@ -11,23 +11,44 @@ exports.addUser = function(values, callback){
 };
 
 exports.fetchUsers = function(callback){
-    db.all("SELECT * FROM users", callback);
+    db.all("SELECT *, rowid FROM users", callback);
 };
 
 exports.getUser = function(userId, callback){
     db.all("SELECT * FROM users WHERE userId = ?", [userId], callback);
 };
 
-exports.deleteUser = function(userId, callback){
-    db.all("DELETE FROM users WHERE userId = ?", [userId], callback);
+exports.deleteUser = function(rowid, callback){
+    db.all("DELETE FROM users WHERE rowid = ?", [rowid], callback);
 };
 
-exports.writeEvent = function(userId, type){
-    if(type === "allowed"){
-        db.run("INSERT INTO events (userId, firstname, lastname, timestamp, type) SELECT ?, firstname, lastname, datetime('now'), ? FROM users WHERE userId = ?", [userId, type, userId]);
-    }else if(type === "denied"){
-        db.run("INSERT INTO events (userId, timestamp, type) SELECT ?, datetime('now'), ?", [userId, type]);
-    }
+exports.checkUser = function(userId, callback){
+    db.all("SELECT datetime('now') AS timestamp",[],function(err,rows){
+        var timestamp = rows[0].timestamp;
+
+        db.all("SELECT userId, firstname, lastname FROM users WHERE userId = ?",[userId],function(err,rows) {
+            if(rows.length > 0){
+                var userInfo = rows[0];
+                db.run("INSERT INTO events VALUES (?, ?, ?, ?, ?)", [userInfo.userId, userInfo.firstname, userInfo.lastname, timestamp, 'allowed']);
+                callback({
+                    userId: userInfo.userId,
+                    firstname: userInfo.firstname,
+                    lastname: userInfo.lastname,
+                    timestamp: timestamp,
+                    type: "allowed"
+                })
+            }else{
+                db.run("INSERT INTO events (timestamp, type) SELECT ?, ?", [timestamp, 'denied']);
+                callback({
+                    userId: null,
+                    firstname: null,
+                    lastname: null,
+                    timestamp: timestamp,
+                    type: "denied"
+                })
+            }
+        });
+    });
 };
 
 exports.fetchEvents = function(callback){

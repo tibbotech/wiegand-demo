@@ -32,19 +32,22 @@
 
                     <form name="newUser.userForm" ng-controller="newUserController as newUser">
                         <div layout-gt-xs="column">
+                            <section layout="row" layout-align="center center">
+                                <md-button class="md-raised md-primary" ng-disabled="newUser.states.registration" ng-click="newUser.registration()">Read card</md-button>
+                                <md-input-container class="md-block" flex-gt-xs>
+                                    <label>User ID (Read an Access Card):</label>
+                                    <input ng-model="newUser.userInfo.userId" required readonly>
+                                </md-input-container>
+                            </section>
+
                             <md-input-container class="md-block" flex-gt-xs>
-                                <label>Firs Name:</label>
+                                <label>First Name:</label>
                                 <input ng-model="newUser.userInfo.firstname" required>
                             </md-input-container>
 
                             <md-input-container class="md-block" flex-gt-xs>
                                 <label>Last Name:</label>
                                 <input ng-model="newUser.userInfo.lastname" required>
-                            </md-input-container>
-
-                            <md-input-container class="md-block" flex-gt-xs>
-                                <label>User ID (Read an Access Card):</label>
-                                <input ng-model="newUser.userInfo.userId" required readonly>
                             </md-input-container>
                         </div>
                         <md-button class="md-raised md-primary" ng-disabled="newUser.userForm.$invalid" ng-click="newUser.add()">Add user</md-button>

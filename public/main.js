@@ -24,10 +24,14 @@
         .controller('newUserController', ['$scope','connection','$rootScope',function($scope,connection,$rootScope) {
             var inst = this;
             inst.userInfo = {};
+            inst.states = {
+                registration:false
+            };
 
             connection.socket.on('reader:get', function (data) {
                 if($rootScope.activeTab === "add-user"){
                     inst.userInfo.userId = data.userId;
+                    inst.states.registration = false;
                     $scope.$apply();
                 }
             });
@@ -39,6 +43,11 @@
 
             inst.add = function(){
                 connection.socket.emit("user:add", inst.userInfo)
+            };
+
+            inst.registration = function(){
+                connection.socket.emit("user:registration");
+                inst.states.registration = true;
             }
         }])
         .controller('userListController', ['$scope','connection','$rootScope',function($scope, connection, $rootScope) {
@@ -60,7 +69,7 @@
             });
 
             inst.delete = function(){
-                connection.socket.emit("user:delete",inst.selected[0].userId);
+                connection.socket.emit("user:delete",inst.selected[0].rowid);
             };
 
             connection.socket.on('user:delete:ok', function () {
@@ -77,6 +86,15 @@
                 "denied": "Access Denied"
             };
 
+            var beautifyRecord = function(item){
+                return {
+                    firstname: item.firstname === null ? "---" : item.firstname,
+                    lastname: item.lastname === null ? "---" : item.lastname,
+                    timestamp:item.timestamp,
+                    type:eventNames[item.type]
+                };
+            };
+
             $scope.$watch(
                 function(){return $rootScope.activeTab},
                 function(newValue){
@@ -88,13 +106,16 @@
 
             connection.socket.on('events:list', function (data) {
                 inst.list = data.map(function(item){
-                    return {
-                        firstname: item.firstname === null ? "---" : item.firstname,
-                        lastname: item.lastname === null ? "---" : item.lastname,
-                        timestamp:item.timestamp,
-                        type:eventNames[item.type]
-                    };
+                    return beautifyRecord(item)
                 });
+                $scope.$apply();
+            });
+
+            connection.socket.on('events:add', function (record) {
+                inst.list.unshift(
+                    beautifyRecord(record)
+                );
+                console.log(inst.list);
                 $scope.$apply();
             });
         }]);
