@@ -1,5 +1,9 @@
 (function () {
     angular.module('accessControl', ['ngMaterial','md.data.table'])
+        .service('connection', [function() {
+            var inst = this;
+            inst.socket = io();
+        }])
         .controller('tabsController', ['$scope','connection','$rootScope',function($scope, connection, $rootScope) {
             var inst = this;
 
@@ -16,10 +20,6 @@
             inst.setActiveTab = function(tabId){
                 $rootScope.activeTab = tabId;
             };
-        }])
-        .service('connection', [function() {
-            var inst = this;
-            inst.socket = io();
         }])
         .controller('newUserController', ['$scope','connection','$rootScope',function($scope,connection,$rootScope) {
             var inst = this;

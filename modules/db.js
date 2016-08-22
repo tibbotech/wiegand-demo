@@ -15,39 +15,24 @@ exports.fetchUsers = function(callback){
 };
 
 exports.getUser = function(userId, callback){
-    db.all("SELECT * FROM users WHERE userId = ?", [userId], callback);
+    db.get("SELECT $userId AS userId, firstname, lastname, CASE WHEN COUNT(*) > 0 THEN 'allowed' ELSE 'denied' END AS permission FROM users WHERE userId = $userId", {$userId:userId}, function(error, result){
+        callback(error, result)
+    });
 };
 
 exports.deleteUser = function(rowid, callback){
-    db.all("DELETE FROM users WHERE rowid = ?", [rowid], callback);
+    db.run("DELETE FROM users WHERE rowid = ?", [rowid], callback);
 };
 
-exports.checkUser = function(userId, callback){
-    db.all("SELECT datetime('now') AS timestamp",[],function(err,rows){
-        var timestamp = rows[0].timestamp;
-
-        db.all("SELECT userId, firstname, lastname FROM users WHERE userId = ?",[userId],function(err,rows) {
-            if(rows.length > 0){
-                var userInfo = rows[0];
-                db.run("INSERT INTO events VALUES (?, ?, ?, ?, ?)", [userInfo.userId, userInfo.firstname, userInfo.lastname, timestamp, 'allowed']);
-                callback({
-                    userId: userInfo.userId,
-                    firstname: userInfo.firstname,
-                    lastname: userInfo.lastname,
-                    timestamp: timestamp,
-                    type: "allowed"
-                })
-            }else{
-                db.run("INSERT INTO events (timestamp, type) SELECT ?, ?", [timestamp, 'denied']);
-                callback({
-                    userId: null,
-                    firstname: null,
-                    lastname: null,
-                    timestamp: timestamp,
-                    type: "denied"
-                })
-            }
-        });
+exports.writeEvent = function(event, callback){
+    db.run("INSERT INTO events VALUES (?, ?, ?, datetime('now'), ?)", [event.userId, event.firstname, event.lastname, event.permission],function(err){
+        if(err !== null){
+            callback(err)
+        }else{
+            db.get("SELECT * FROM events WHERE rowid = ?", [this.lastID], function(error, result){
+                callback(null, result)
+            })
+        }
     });
 };
 

@@ -11,12 +11,15 @@ red.setValue(1);
 exports.blink = function(color){
     if(color === "red"){
         red.setValue(0);
+
+        setTimeout(function(){
+            red.setValue(1);
+        },500)
     }else if (color === "blue"){
         blue.setValue(0);
-    }
 
-    setTimeout(function(){
-        blue.setValue(1);
-        red.setValue(1);
-    },500)
+        setTimeout(function(){
+            blue.setValue(1);
+        },500)
+    }
 };

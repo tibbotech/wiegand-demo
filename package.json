@@ -6,7 +6,9 @@
   "dependencies": {
     "express": "^4.14.0",
     "socket.io": "^1.4.8",
-    "tibbit-08": "^0.0.1"
+    "@tibbo-tps/tibbit-08": "^0.0.x",
+    "@tibbo-tps/gpio": "^0.0.x",
+    "node-sqlit3":"git+https://github.com/Voxiferus/node-sqlite3.git"
   },
   "devDependencies": {},
   "scripts": {
