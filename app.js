@@ -66,6 +66,7 @@ tibbit08.init(["s23"],100)
                 }else{
                     led.blink("blue");
                 }
+
                 db.writeEvent(result, function(err, result){
                     if(err === null){
                         clients.emit('events:add', result);

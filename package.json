@@ -8,7 +8,7 @@
     "socket.io": "^1.4.8",
     "@tibbo-tps/tibbit-08": "^0.0.x",
     "@tibbo-tps/gpio": "^0.0.x",
-    "node-sqlit3":"git+https://github.com/Voxiferus/node-sqlite3.git"
+    "node-sqlite3":"git+https://github.com/Voxiferus/node-sqlite3.git"
   },
   "devDependencies": {},
   "scripts": {
