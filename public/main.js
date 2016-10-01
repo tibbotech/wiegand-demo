@@ -38,7 +38,8 @@
 
             connection.socket.on('user:add:ok', function () {
                 inst.userInfo = {};
-                $scope.$apply();
+                inst.userForm.$setPristine();
+                inst.userForm.$setUntouched();
             });
 
             inst.add = function(){
@@ -48,7 +49,7 @@
             inst.registration = function(){
                 connection.socket.emit("user:registration");
                 inst.states.registration = true;
-            }
+            };
         }])
         .controller('userListController', ['$scope','connection','$rootScope',function($scope, connection, $rootScope) {
             var inst = this;
