@@ -1,14 +1,16 @@
 {
   "name": "wiegand-demo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "app.js",
   "dependencies": {
     "express": "^4.14.0",
     "socket.io": "^1.4.8",
     "@tibbo-tps/tibbit-08": "^0.0.x",
-    "@tibbo-tps/gpio": "^0.0.x",
-    "better-sqlite3": "^7.5.0"
+    "@tibbo-tps/pinmap": "^0.0.x",
+    "@tibbo-tps/socket-name-parser": "^0.0.x",
+    "node-libgpiod": ">=0.3.0",
+    "better-sqlite3": "~7.5.x"
   },
   "devDependencies": {},
   "scripts": {
