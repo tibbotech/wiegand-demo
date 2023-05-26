@@ -21,5 +21,5 @@ node ./app.js
 ```
 
 ## Notes: 
-1) LEDs are temporary switched off for now
+1) LEDs configuration is placed at conf.js
 2) you can put your Wiegand Tibbit on any socket: it will be found by index#0
