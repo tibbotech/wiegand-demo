@@ -10,7 +10,7 @@ git clone https://github.com/tibbotech/wiegand-demo.git
 cd wiegand-demo
 npm i .
 ```
-If npm install will fail trying to build the node module, install build-essentiols and start again:
+If npm install will fail trying to build the node module, install build-essentials and start again:
 ```
 dnf -y install packagegroup-core-buildessential libgpiod-dev
 npm i .
